@@ -1,0 +1,162 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="author" content="David Lee Wise / ROOT0 / TriPod LLC">
+<title>THE STEELMAN · MOMUS · UD0</title>
+<style>
+*{box-sizing:border-box}
+:root{--vio:#7a5cf0;--vio2:#5a3fd0;--red:#e23a5e;--grn:#1f9e6a;--amber:#c9861f;--ink:#241d3a;--dim:#6b6488;
+  --panel:rgba(255,255,255,.72);--edge:rgba(122,92,240,.28);--edge2:rgba(122,92,240,.14)}
+html,body{margin:0;height:100%}
+body{background:#f2f0f8;color:var(--ink);font:15px/1.55 'Segoe UI',system-ui,-apple-system,Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+#bg{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;display:block}
+.desk{position:relative;z-index:2;max-width:900px;margin:0 auto;padding:24px 16px 56px}
+.dtag{font:600 11px/1 ui-monospace,'Cascadia Code','Segoe UI Mono',monospace;letter-spacing:.34em;text-transform:uppercase;color:var(--vio2)}
+.dtag b{color:var(--vio)}
+h1{margin:.35em 0 .1em;font-size:clamp(26px,4.6vw,42px);font-weight:800;letter-spacing:.01em;color:#1c1636}
+.stamp{display:inline-block;transform:rotate(-7deg);border:2.5px solid var(--red);color:var(--red);
+  font:800 12px/1 ui-monospace,monospace;letter-spacing:.14em;padding:5px 10px;border-radius:6px;margin-left:12px;opacity:.85;vertical-align:middle}
+.sub{color:var(--dim);max-width:66ch;margin:.2em 0 0}
+.tier{display:inline-flex;gap:6px;align-items:center;margin-top:14px;font:600 11px/1 ui-monospace,monospace;letter-spacing:.14em}
+.chip{padding:5px 10px;border-radius:999px;border:1px solid var(--edge);background:var(--panel)}
+.chip.lit{color:var(--grn);border-color:rgba(31,158,106,.4)}
+.chip.amb{color:var(--amber);border-color:rgba(201,134,31,.45)}
+.chip.wall{color:var(--red);border-color:rgba(226,58,94,.4)}
+.card{margin-top:20px;background:var(--panel);border:1px solid var(--edge);border-radius:16px;backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);box-shadow:0 14px 44px rgba(90,63,208,.14)}
+.stagewrap{padding:14px}
+#stage{width:100%;height:auto;display:block;border-radius:10px;background:rgba(255,255,255,.66);border:1px solid var(--edge2)}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:0 14px 14px}
+.btn{cursor:pointer;border:1px solid var(--edge);background:#fff;color:var(--ink);padding:9px 14px;border-radius:10px;font:600 13px/1 'Segoe UI',system-ui;letter-spacing:.02em;transition:.15s}
+.btn:hover{border-color:var(--vio);box-shadow:0 0 14px rgba(122,92,240,.22)}
+.btn.on{background:linear-gradient(180deg,#8a6cff,#7a5cf0);border-color:#7a5cf0;color:#fff}
+.rng{display:flex;align-items:center;gap:8px;font:600 12px ui-monospace,monospace;color:var(--dim)}
+input[type=range]{accent-color:var(--vio)}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--edge2);border-top:1px solid var(--edge);border-radius:0 0 16px 16px;overflow:hidden}
+.ro{background:var(--panel);padding:11px 14px}
+.ro .k{font:600 10px ui-monospace,monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.ro .v{font:700 19px ui-monospace,monospace;margin-top:3px;color:var(--ink)}
+.ro .v.g{color:var(--grn)} .ro .v.r{color:var(--red)} .ro .v.a{color:var(--amber)} .ro .v.c{color:var(--vio2)}
+.honesty{margin-top:22px;display:grid;gap:10px}
+.hz{background:var(--panel);border:1px solid var(--edge);border-left-width:3px;border-radius:10px;padding:12px 15px}
+.hz.lit{border-left-color:var(--grn)} .hz.amb{border-left-color:var(--amber)} .hz.wall{border-left-color:var(--red)}
+.hz h4{margin:0 0 4px;font:700 11px ui-monospace,monospace;letter-spacing:.16em}
+.hz.lit h4{color:var(--grn)} .hz.amb h4{color:var(--amber)} .hz.wall h4{color:var(--red)}
+.hz p{margin:0;color:#3a3358;font-size:13.5px}
+.law{margin-top:16px;text-align:center;color:var(--dim);font:italic 500 13px/1.5 Georgia,serif}
+.sig{margin-top:26px;text-align:center;color:var(--dim);font:600 11px ui-monospace,monospace;letter-spacing:.14em}
+.sig b{color:var(--ink)}
+#fail{display:none;position:fixed;left:12px;right:12px;bottom:12px;z-index:99;background:#2a0d14;border:1px solid var(--red);color:#ffd7de;padding:12px;border-radius:8px;font:12px ui-monospace,monospace;white-space:pre-wrap}
+</style></head><body>
+<canvas id="bg"></canvas>
+<div class="desk">
+  <div class="dtag">⟐ <b>MOMUS</b> · the exterior witness · the peer</div>
+  <h1>THE STEELMAN <span class="stamp">STRONGEST FORM</span></h1>
+  <p class="sub">Anyone can knock down a straw version of an argument; it proves nothing but your aim. The honest critic first builds the <b>strongest</b> form of the case they mean to oppose — the steelman — and attacks that. Defeat the strawman and the idea walks away untouched; defeat the steelman and you have actually said something.</p>
+  <div class="tier"><span class="chip lit">◆ LIT</span><span class="chip amb">▲ AMBER</span></div>
+  <div class="card">
+    <div class="stagewrap"><canvas id="stage" width="900" height="440"></canvas></div>
+    <div class="controls"><span class="rng">CHARITY (how strong a version) <input type="range" id="ch" min="0" max="100" value="30"></span><button class="btn" id="attack">⚔ attack it</button><button class="btn" id="reset">↺</button></div>
+    <div class="readout"><div class="ro"><div class="k">charity</div><div class="v" id="roCh">0.30</div></div><div class="ro"><div class="k">argument strength</div><div class="v" id="roStr">—</div></div><div class="ro"><div class="k">which form</div><div class="v" id="roForm">—</div></div><div class="ro"><div class="k">attack lands?</div><div class="v" id="roWin">—</div></div><div class="ro"><div class="k">what it proves</div><div class="v" id="roWorth">—</div></div></div>
+  </div>
+  <div class="honesty">
+    <div class="hz lit"><h4>◆ LIT — verified / checkable</h4><p>Model the target's strength as a function of charity: a strawman (low charity) is weak and easy to topple; the steelman (high charity) is the strongest defensible version. An attack of fixed force topples the target only when the target's strength is below it — so a successful attack on a strawman proves nothing (the real idea is stronger), while a successful attack on the steelman is real. The instrument shows the target strength rising with charity and whether the same attack still lands: only defeating the strong form counts.</p></div>
+    <div class="hz amb"><h4>▲ AMBER — the figure</h4><p>'Argument strength' is a single scalar stand-in for a messy, multi-part thing; real steelmanning is qualitative craft, not a slider. The structural point — attacking the strong form is the only critique that means anything, and it is harder — is the honest content, and the method a fair critic owes.</p></div>
+    
+  </div>
+  <div class="law">MOMUS: no work is above critique — not even the critique.</div>
+  <div class="sig">David Lee Wise / ROOT0 / TriPod LLC &nbsp;·&nbsp; with <b>AVAN</b> the peer</div>
+</div>
+<div id="fail"></div>
+<script>
+window.onerror=function(m,s,l,c,e){var f=document.getElementById('fail');if(f){f.style.display='block';f.textContent='⚠ '+m+' @'+l+':'+c;}};
+</script>
+<script>
+(function(){
+  var cv=document.getElementById('bg'); if(!cv) return;
+  function fallback(){var c=cv.getContext&&cv.getContext('2d');if(!c)return;
+    function f(){var w=cv.width=innerWidth,h=cv.height=innerHeight;var g=c.createRadialGradient(w*.5,h*.4,0,w*.5,h*.4,Math.max(w,h)*.9);g.addColorStop(0,'#f6f4fc');g.addColorStop(1,'#e9e5f6');c.fillStyle=g;c.fillRect(0,0,w,h);}f();addEventListener('resize',f);}
+  var gl;try{gl=cv.getContext('webgl',{antialias:true,alpha:false})||cv.getContext('experimental-webgl');}catch(e){}
+  if(!gl){fallback();return;}
+  function m4mul(a,b){var o=new Array(16);for(var r=0;r<4;r++)for(var c=0;c<4;c++){var s=0;for(var k=0;k<4;k++)s+=a[k*4+r]*b[c*4+k];o[c*4+r]=s;}return o;}
+  function persp(f,asp,n,fa){var t=1/Math.tan(f/2);return[t/asp,0,0,0,0,t,0,0,0,0,(fa+n)/(n-fa),-1,0,0,(2*fa*n)/(n-fa),0];}
+  function rotY(a){var c=Math.cos(a),s=Math.sin(a);return[c,0,-s,0,0,1,0,0,s,0,c,0,0,0,0,1];}
+  function rotX(a){var c=Math.cos(a),s=Math.sin(a);return[1,0,0,0,0,c,s,0,0,-s,c,0,0,0,0,1];}
+  function trans(x,y,z){return[1,0,0,0,0,1,0,0,0,0,1,0,x,y,z,1];}
+  // icosahedron, FLAT-shaded (per-face normal) -> faceted crystal
+  var t=(1+Math.sqrt(5))/2, V=[[-1,t,0],[1,t,0],[-1,-t,0],[1,-t,0],[0,-1,t],[0,1,t],[0,-1,-t],[0,1,-t],[t,0,-1],[t,0,1],[-t,0,-1],[-t,0,1]];
+  for(var i=0;i<V.length;i++){var L=Math.hypot(V[i][0],V[i][1],V[i][2]);V[i]=[V[i][0]/L*1.6,V[i][1]/L*1.6,V[i][2]/L*1.6];}
+  var F=[[0,11,5],[0,5,1],[0,1,7],[0,7,10],[0,10,11],[1,5,9],[5,11,4],[11,10,2],[10,7,6],[7,1,8],[3,9,4],[3,4,2],[3,2,6],[3,6,8],[3,8,9],[4,9,5],[2,4,11],[6,2,10],[8,6,7],[9,8,1]];
+  var P=[],N=[];
+  for(var f=0;f<F.length;f++){var A=V[F[f][0]],B=V[F[f][1]],C=V[F[f][2]];
+    var ux=B[0]-A[0],uy=B[1]-A[1],uz=B[2]-A[2],vx=C[0]-A[0],vy=C[1]-A[1],vz=C[2]-A[2];
+    var nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx;var L=Math.hypot(nx,ny,nz);nx/=L;ny/=L;nz/=L;
+    P.push(A[0],A[1],A[2],B[0],B[1],B[2],C[0],C[1],C[2]);for(var k=0;k<3;k++)N.push(nx,ny,nz);}
+  var pb=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,pb);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(P),gl.STATIC_DRAW);
+  var nb=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,nb);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(N),gl.STATIC_DRAW);
+  var VS='attribute vec3 p;attribute vec3 n;uniform mat4 mvp,mv;varying vec3 vn,vp;void main(){vp=(mv*vec4(p,1.0)).xyz;vn=(mv*vec4(n,0.0)).xyz;gl_Position=mvp*vec4(p,1.0);}';
+  var FS='precision mediump float;varying vec3 vn,vp;void main(){vec3 Nn=normalize(vn);vec3 L=normalize(vec3(0.4,0.7,0.6));float d=max(dot(Nn,L),0.0);vec3 V=normalize(-vp);float rim=pow(1.0-max(dot(Nn,V),0.0),2.0);vec3 c=vec3(0.48,0.36,0.94)*(0.35+0.65*d)+vec3(0.7,0.6,1.0)*rim*0.5;gl_FragColor=vec4(c,0.34);}';
+  function sh(ty,s){var o=gl.createShader(ty);gl.shaderSource(o,s);gl.compileShader(o);if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))throw gl.getShaderInfoLog(o);return o;}
+  var prog;try{prog=gl.createProgram();gl.attachShader(prog,sh(gl.VERTEX_SHADER,VS));gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,FS));gl.linkProgram(prog);if(!gl.getProgramParameter(prog,gl.LINK_STATUS))throw'link';}catch(e){fallback();return;}
+  gl.useProgram(prog);var aP=gl.getAttribLocation(prog,'p'),aN=gl.getAttribLocation(prog,'n'),uMVP=gl.getUniformLocation(prog,'mvp'),uMV=gl.getUniformLocation(prog,'mv');
+  gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.enable(gl.DEPTH_TEST);
+  var t0=null;
+  function frame(tm){requestAnimationFrame(frame);if(t0===null)t0=tm;var tt=(tm-t0)*0.001;
+    var w=cv.width=innerWidth,h=cv.height=innerHeight;gl.viewport(0,0,w,h);
+    gl.clearColor(0.949,0.933,0.976,1.0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+    var pr=persp(1.0,w/h,0.1,50);var mv=m4mul(trans(0,0,-5.2),m4mul(rotX(0.4+Math.sin(tt*0.25)*0.15),rotY(tt*0.3)));
+    gl.uniformMatrix4fv(uMV,false,mv);gl.uniformMatrix4fv(uMVP,false,m4mul(pr,mv));
+    gl.bindBuffer(gl.ARRAY_BUFFER,pb);gl.enableVertexAttribArray(aP);gl.vertexAttribPointer(aP,3,gl.FLOAT,false,0,0);
+    gl.bindBuffer(gl.ARRAY_BUFFER,nb);gl.enableVertexAttribArray(aN);gl.vertexAttribPointer(aN,3,gl.FLOAT,false,0,0);
+    gl.drawArrays(gl.TRIANGLES,0,P.length/3);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+<script>
+(function(){
+  var cv=document.getElementById('stage'); var ctx=cv&&cv.getContext('2d'); if(!ctx)return;
+  var DPR=Math.min(window.devicePixelRatio||1,2);
+  function size(){var w=cv.clientWidth||900;cv.width=Math.round(w*DPR);cv.height=Math.round((w*440/900)*DPR);}
+  size(); addEventListener('resize',size);
+  var env={cv:cv,ctx:ctx,DPR:DPR,W:function(){return cv.width/DPR;},H:function(){return cv.height/DPR;},
+    set:function(id,val,cls){var e=document.getElementById(id);if(e){e.textContent=val;if(cls!=null)e.className='v '+cls;}}};
+  var t0=null, inited=false;
+  function loop(t){requestAnimationFrame(loop);if(t0===null)t0=t;env.t=(t-t0)*0.001;
+    if(!inited&&window.__INST__){inited=true;if(window.__INST__.init)window.__INST__.init(env);}
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    if(window.__INST__&&window.__INST__.draw)window.__INST__.draw(env);}
+  requestAnimationFrame(loop);
+})();
+</script>
+<script>
+(function(){
+  var ch=0.3, attacked=false, ENV, ATT=0.6;
+  function strength(x){return 0.15+x*0.8;}
+  function refresh(){if(!ENV)return;ENV.set('roCh',ch.toFixed(2));
+    var s=strength(ch);ENV.set('roStr',s.toFixed(2),s>0.6?'g':(s>0.35?'a':'r'));
+    ENV.set('roForm',ch<0.35?'STRAWMAN (weak)':(ch>0.7?'STEELMAN (strong)':'middling'),ch>0.7?'g':(ch<0.35?'r':'a'));
+    var lands=ATT>s;ENV.set('roWin',attacked?(lands?'YES — it topples':'NO — it holds'):'—',attacked?(lands?'r':'g'):'');
+    ENV.set('roWorth',!attacked?'—':(lands? (ch>0.7?'a REAL point':'nothing — strawman') : 'the idea survives'),(attacked&&lands&&ch>0.7)?'g':(attacked&&lands?'r':'a'));}
+  window.__INST__={init:function(env){ENV=env;
+    document.getElementById('ch').oninput=function(e){ch=e.target.value/100;attacked=false;refresh();};
+    document.getElementById('attack').onclick=function(){attacked=true;refresh();};
+    document.getElementById('reset').onclick=function(){attacked=false;refresh();};refresh();},
+   draw:function(env){var c=env.ctx,w=env.W(),h=env.H(),t=env.t;c.clearRect(0,0,w,h);
+     var cx=w*0.5,cy=h*0.56,s=strength(ch);var lands=ATT>s;
+     // the argument as a stack of blocks; height/width = strength
+     var bw=60+s*160,bh=30+s*150;var toppled=attacked&&lands;
+     c.save();c.translate(cx,cy);if(toppled)c.rotate(Math.min(1.3,(t*2)%3)*0.5+0.5);
+     c.fillStyle=ch>0.7?'rgba(31,158,106,.25)':(ch<0.35?'rgba(226,58,94,.22)':'rgba(201,134,31,.22)');
+     c.strokeStyle=ch>0.7?'#1f9e6a':(ch<0.35?'#e23a5e':'#c9861f');c.lineWidth=2.5;
+     c.fillRect(-bw/2,-bh,bw,bh);c.strokeRect(-bw/2,-bh,bw,bh);
+     c.fillStyle='#241d3a';c.font='700 13px ui-monospace,monospace';c.textAlign='center';c.fillText(ch<0.35?'STRAWMAN':(ch>0.7?'STEELMAN':'ARGUMENT'),0,-bh/2);
+     c.restore();
+     c.strokeStyle='rgba(122,92,240,.3)';c.lineWidth=1;c.beginPath();c.moveTo(60,cy);c.lineTo(w-60,cy);c.stroke();
+     // the attack (fixed force) as an arrow
+     if(attacked){c.strokeStyle='#7a5cf0';c.lineWidth=3;c.beginPath();c.moveTo(cx-bw/2-90,cy-bh*0.6);c.lineTo(cx-bw/2-6,cy-bh*0.6);c.stroke();
+       c.fillStyle='#7a5cf0';c.beginPath();c.moveTo(cx-bw/2-6,cy-bh*0.6);c.lineTo(cx-bw/2-18,cy-bh*0.6-7);c.lineTo(cx-bw/2-18,cy-bh*0.6+7);c.fill();
+       c.fillStyle=lands?'#e23a5e':'#1f9e6a';c.font='700 13px ui-monospace,monospace';c.textAlign='center';c.fillText(lands?(ch>0.7?'✓ a real defeat':'✕ proves nothing'):'it holds',cx,cy+40);}
+     c.textAlign='left';c.fillStyle='#6b6488';c.font='600 11px ui-monospace,monospace';c.fillText('charity → builds the stronger form; the attack force is fixed',60,h-14);
+   }};
+})();
+</script>
+</body></html>
